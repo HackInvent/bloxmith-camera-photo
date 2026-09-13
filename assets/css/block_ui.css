@@ -1,0 +1,164 @@
+.camera-photo-node-card .camera-photo-capture-button {
+  min-width: 34px;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.camera-photo-node-card .camera-photo-capture-button:hover,
+.camera-photo-node-card .camera-photo-capture-button:focus-visible {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.28), 0 3px 10px rgba(15, 23, 42, 0.14);
+}
+
+.camera-photo-node-card .camera-photo-capture-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.camera-photo-capture-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.camera-photo-preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: grid;
+  place-items: stretch;
+  background: rgba(2, 6, 23, 0.88);
+}
+
+.camera-photo-preview-shell {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+.camera-photo-preview-stage {
+  display: grid;
+  min-height: 0;
+  place-items: center;
+  overflow: hidden;
+  background: #020617;
+}
+
+.camera-photo-preview-video,
+.camera-photo-preview-image {
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  object-fit: contain;
+}
+
+.camera-photo-preview-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 18px 16px 10px;
+  background: rgba(2, 6, 23, 0.92);
+}
+
+.camera-photo-preview-close {
+  min-height: 44px;
+  padding: 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font: inherit;
+}
+
+.camera-photo-preview-shot {
+  width: 74px;
+  height: 74px;
+  border: 5px solid #ffffff;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 5px rgba(2, 6, 23, 0.18), 0 8px 24px rgba(0, 0, 0, 0.36);
+}
+
+.camera-photo-preview-shot:disabled {
+  opacity: 0.58;
+}
+
+.camera-photo-preview-status {
+  margin: 0;
+  min-height: 44px;
+  padding: 10px 16px 16px;
+  color: rgba(255, 255, 255, 0.78);
+  text-align: center;
+  overflow-wrap: anywhere;
+  background: rgba(2, 6, 23, 0.92);
+}
+
+.cw-camera-photo-inspector .field-grid,
+.cw-camera-photo-modal .field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.camera-photo-modal-body {
+  display: grid;
+  gap: 14px;
+  max-height: min(72vh, 760px);
+  overflow: auto;
+  padding: 14px;
+}
+
+.camera-photo-modal-section {
+  display: grid;
+  gap: 10px;
+}
+
+.camera-browser-capture {
+  display: grid;
+  gap: 10px;
+}
+
+.camera-browser-stage {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 8px;
+  background: #111827;
+}
+
+.camera-browser-stage video,
+.camera-browser-stage img {
+  display: block;
+  width: 100%;
+  max-height: min(44vh, 420px);
+  object-fit: contain;
+}
+
+.camera-browser-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.camera-browser-status {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.camera-photo-modal-footer {
+  justify-content: flex-end;
+  padding: 12px 14px;
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+@media (max-width: 760px) {
+  .cw-camera-photo-inspector .field-grid,
+  .cw-camera-photo-modal .field-grid {
+    grid-template-columns: 1fr;
+  }
+}

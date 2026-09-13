@@ -1,0 +1,74 @@
+.camera-photo-mini-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 13px;
+  border: 1px solid rgba(37, 99, 235, 0.24);
+  border-radius: 14px;
+  background: #f8fbff;
+  color: #172033;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.camera-photo-mini-card:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.24);
+  outline-offset: 2px;
+}
+
+.camera-photo-mini-icon {
+  display: inline-grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  place-items: center;
+  border-radius: 12px;
+  background: #eef6ff;
+  color: #1d4ed8;
+  cursor: pointer;
+}
+
+.camera-photo-mini-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.camera-photo-mini-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.camera-photo-mini-copy strong {
+  overflow-wrap: anywhere;
+}
+
+.camera-photo-mini-copy small,
+.camera-photo-mini-meta {
+  color: #1d4ed8;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.camera-photo-mini-meta {
+  justify-self: end;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eaf3ff;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .camera-photo-mini-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .camera-photo-mini-meta {
+    display: none;
+  }
+}
