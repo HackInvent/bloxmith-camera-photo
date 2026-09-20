@@ -128,7 +128,7 @@ function stopCamera(state) {
 async function startCamera(root, state, api) {
   if (!navigator.mediaDevices?.getUserMedia) {
     setStatus(root, "Camera navigateur indisponible.");
-    api.log?.("[camera] navigator.mediaDevices.getUserMedia indisponible.");
+    api.log?.("[camera] navigator.mediaDevices.getUserMedia unavailable.");
     return;
   }
   if (state.startButton instanceof HTMLButtonElement) {
@@ -185,7 +185,7 @@ async function captureAndSave(root, state, api) {
   if (state.saveButton instanceof HTMLButtonElement) {
     state.saveButton.disabled = true;
   }
-  setStatus(root, "Enregistrement de la photo...");
+  setStatus(root, "Saving the photo...");
   try {
     const result = await api.applyAction("capture_browser_photo", {
       data_url: dataUrl,
@@ -196,8 +196,8 @@ async function captureAndSave(root, state, api) {
       state.preview.src = dataUrl;
       state.preview.hidden = false;
     }
-    setStatus(root, savedPath ? `Photo enregistree: ${savedPath}` : "Photo enregistree.");
-    api.log?.(savedPath ? `[camera] Photo enregistree: ${savedPath}` : "[camera] Photo enregistree.");
+    setStatus(root, savedPath ? `Photo saved: ${savedPath}` : "Photo saved.");
+    api.log?.(savedPath ? `[camera] Photo saved: ${savedPath}` : "[camera] Photo saved.");
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error || "erreur inconnue");
     setStatus(root, `Enregistrement impossible: ${message}`);

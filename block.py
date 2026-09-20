@@ -179,7 +179,7 @@ class CameraPhotoBlock(BlockDefinition):
         ]
         output_path = self._resolve_existing_capture_path(context.root_dir, config["latest_capture_path"])
         if output_path is None:
-            error = "Aucune image navigateur capturee. Ouvrez le modal du bloc et enregistrez une photo."
+            error = "No browser image captured. Open the block modal and save a photo."
             logs.append(f"[camera-error] {context.node_id}: {error}")
             return self._failed(error, logs)
 
@@ -331,7 +331,7 @@ class CameraPhotoBlock(BlockDefinition):
             "node_patch": {"config": config_patch},
             "rerender_inspector": False,
             "saved_path": relative_path,
-            "message": f"[camera] Photo navigateur enregistree: {relative_path}",
+            "message": f"[camera] Browser photo saved: {relative_path}",
         }
 
     def _decode_browser_data_url(self, data_url: Any) -> tuple[str, bytes]:

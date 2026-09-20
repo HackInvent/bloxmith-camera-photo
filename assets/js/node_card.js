@@ -235,7 +235,7 @@ async function openCaptureOverlay(root, api, context) {
     return;
   }
   if (!navigator.mediaDevices?.getUserMedia) {
-    api.log?.("[camera] navigator.mediaDevices.getUserMedia indisponible.");
+    api.log?.("[camera] navigator.mediaDevices.getUserMedia unavailable.");
     return;
   }
   if (window.isSecureContext === false) {
@@ -282,14 +282,14 @@ async function openCaptureOverlay(root, api, context) {
         const savedPath = await persistVideoFrame(elements.video, elements.canvas, api, config);
         elements.preview.src = elements.canvas.toDataURL("image/jpeg", config.jpeg_quality);
         elements.preview.hidden = false;
-        elements.status.textContent = savedPath ? `Photo enregistree: ${savedPath}` : "Photo enregistree.";
-        api.log?.(savedPath ? `[camera] Photo enregistree depuis la carte: ${savedPath}` : "[camera] Photo enregistree depuis la carte.");
+        elements.status.textContent = savedPath ? `Photo saved: ${savedPath}` : "Photo saved.";
+        api.log?.(savedPath ? `[camera] Photo saved from the card: ${savedPath}` : "[camera] Photo saved from the card.");
         window.setTimeout(close, 450);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error || "erreur inconnue");
         elements.status.textContent = `Enregistrement impossible: ${message}`;
         elements.captureButton.disabled = false;
-        api.log?.(`[camera-error] Enregistrement depuis la carte impossible: ${message}`);
+        api.log?.(`[camera-error] Saving from the card failed: ${message}`);
       }
     });
     elements.closeButton.addEventListener("click", close);
@@ -300,7 +300,7 @@ async function openCaptureOverlay(root, api, context) {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error || "erreur inconnue");
-    api.log?.(`[camera-error] Ouverture camera depuis la carte impossible: ${message}`);
+    api.log?.(`[camera-error] Opening the camera from the card failed: ${message}`);
     close();
   }
 }
@@ -326,7 +326,7 @@ async function captureFromNodeCard(root, api, context) {
     await elements.video.play();
     await waitForVideoFrame(elements.video);
     const savedPath = await persistVideoFrame(elements.video, elements.canvas, api, config);
-    api.log?.(savedPath ? `[camera] Photo enregistree depuis la carte: ${savedPath}` : "[camera] Photo enregistree depuis la carte.");
+    api.log?.(savedPath ? `[camera] Photo saved from the card: ${savedPath}` : "[camera] Photo saved from the card.");
   } finally {
     stopStream(stream);
     elements.video.srcObject = null;

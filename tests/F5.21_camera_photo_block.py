@@ -142,7 +142,7 @@ def main() -> None:
 
         failed = block.execute_runtime(context(root_dir, ""))
         expect(failed.status == "failed", "Without a browser capture, the block must fail cleanly.")
-        expect("Aucune image navigateur" in failed.error, "The error must ask for a browser capture.")
+        expect("No browser image captured" in failed.error, "The error must ask for a browser capture.")
 
     node = block.build_node_payload(node_id="camera-photo-ui")
     card = block.render_node_card(node=node)
@@ -247,7 +247,7 @@ def main() -> None:
                 },
             },
         )
-        expect(patched.get("graph_patch", {}).get("ok") is True, f"La capture node-card doit patcher le graphe: {patched}")
+        expect(patched.get("graph_patch", {}).get("ok") is True, f"The node-card capture must patch the graph: {patched}")
         updated_graph = http_json(server.base_url, f"/api/projects/{project_id}/graph/state")
         updated_camera = next(item for item in updated_graph["document"]["nodes"] if item["id"] == "camera-photo-1")
         patched_path = str(updated_camera.get("config", {}).get("latest_capture_path") or "")
