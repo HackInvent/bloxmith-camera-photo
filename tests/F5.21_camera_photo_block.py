@@ -136,37 +136,37 @@ def main() -> None:
         capture_path.parent.mkdir(parents=True, exist_ok=True)
         capture_path.write_bytes(JPEG_BYTES)
         result = block.execute_runtime(context(root_dir, "exports/camera-test/camera-photo-1_browser_test.jpg"))
-        expect(result.status == "success", "La capture navigateur sauvegardee doit etre emise.")
-        expect(result.outputs and result.outputs[0].content_type == IMAGE_PATH, "La sortie doit etre image/path.")
-        expect(Path(result.outputs[0].value).is_file(), "Le chemin emis doit pointer vers le fichier sauvegarde.")
+        expect(result.status == "success", "The saved browser capture must be emitted.")
+        expect(result.outputs and result.outputs[0].content_type == IMAGE_PATH, "The output must be image/path.")
+        expect(Path(result.outputs[0].value).is_file(), "The emitted path must point to the saved file.")
 
         failed = block.execute_runtime(context(root_dir, ""))
-        expect(failed.status == "failed", "Sans capture navigateur, le bloc doit echouer proprement.")
-        expect("Aucune image navigateur" in failed.error, "L'erreur doit demander une capture navigateur.")
+        expect(failed.status == "failed", "Without a browser capture, the block must fail cleanly.")
+        expect("Aucune image navigateur" in failed.error, "The error must ask for a browser capture.")
 
     node = block.build_node_payload(node_id="camera-photo-ui")
     card = block.render_node_card(node=node)
-    expect("Camera" in card["html"], "La node-card doit rendre le bloc Camera.")
-    expect("Navigateur web" in card["html"], "La node-card doit afficher la source navigateur.")
-    expect("data-camera-photo-capture" in card["html"], "La node-card doit exposer le bouton capture.")
-    expect('aria-label="Capturer une photo"' in card["html"], "Le bouton capture doit etre accessible.")
-    expect(card.get("context", {}).get("resolution") == "1280x720", "La node-card doit recevoir la resolution.")
-    expect(card.get("context", {}).get("camera_facing") == "environment", "La node-card doit demander la camera arriere par defaut.")
-    expect(card.get("context", {}).get("output_dir") == "exports/camera", "La node-card doit recevoir output_dir.")
+    expect("Camera" in card["html"], "The node card must render the Camera block.")
+    expect("Navigateur web" in card["html"], "The node card must show the browser source.")
+    expect("data-camera-photo-capture" in card["html"], "The node card must expose the capture button.")
+    expect('aria-label="Capturer une photo"' in card["html"], "The capture button must be accessible.")
+    expect(card.get("context", {}).get("resolution") == "1280x720", "The node card must receive the resolution.")
+    expect(card.get("context", {}).get("camera_facing") == "environment", "The node card must request the rear camera by default.")
+    expect(card.get("context", {}).get("output_dir") == "exports/camera", "The node card must receive output_dir.")
     mini_card = block.render_mini_node_card(node=node)
-    expect("data-camera-photo-mini-card" in mini_card["html"], "La mini-card doit etre rendue par le bloc Camera.")
-    expect("Toucher pour capturer" in mini_card["html"], "La mini-card doit exposer l'action compacte de capture.")
+    expect("data-camera-photo-mini-card" in mini_card["html"], "The mini card must be rendered by the Camera block.")
+    expect("Toucher pour capturer" in mini_card["html"], "The mini card must expose the compact capture action.")
     inspector = block.render_inspector_panel(node=node)
-    expect("data-block-config-field=\"camera_facing\"" in inspector["html"], "L'inspecteur doit exposer la camera avant/arriere.")
-    expect("data-block-config-field=\"jpeg_quality\"" in inspector["html"], "L'inspecteur doit exposer la qualite JPEG.")
-    expect("data-block-config-field=\"device\"" not in inspector["html"], "L'inspecteur ne doit plus exposer le device serveur.")
+    expect("data-block-config-field=\"camera_facing\"" in inspector["html"], "The inspector must expose the front/rear camera.")
+    expect("data-block-config-field=\"jpeg_quality\"" in inspector["html"], "The inspector must expose the JPEG quality.")
+    expect("data-block-config-field=\"device\"" not in inspector["html"], "The inspector must no longer expose the server device.")
     modal = block.render_modal(node=node)
-    expect("data-camera-browser-start" in modal["html"], "Le modal doit exposer l'ouverture camera navigateur.")
-    expect("data-block-config-field=\"resolution\"" in modal["html"], "Le modal doit exposer la resolution.")
-    expect("data-block-config-field=\"camera_facing\"" in modal["html"], "Le modal doit exposer la camera avant/arriere.")
+    expect("data-camera-browser-start" in modal["html"], "The modal must expose the browser camera opening.")
+    expect("data-block-config-field=\"resolution\"" in modal["html"], "The modal must expose the resolution.")
+    expect("data-block-config-field=\"camera_facing\"" in modal["html"], "The modal must expose the front/rear camera.")
 
     with isolated_server() as server:
-        # Les surfaces sont des assets de release : le bundled kind n'en sert aucun.
+        # Surfaces are release assets: a bundled kind serves none of them.
         model = install_test_package(server, "camera_photo")
         key = quote(release_key(model), safe="")
         served = lambda payload, suffix: next(
@@ -184,19 +184,19 @@ def main() -> None:
             timeout=5,
         ) as response:
             js_body = response.read().decode("utf-8")
-        expect("getUserMedia" in js_body, "Le JS modal doit utiliser getUserMedia.")
-        expect("facingMode" in js_body, "Le JS modal doit demander la camera avant/arriere.")
+        expect("getUserMedia" in js_body, "The modal JS must use getUserMedia.")
+        expect("facingMode" in js_body, "The modal JS must request the front/rear camera.")
         with urlopen(
             f"{server.base_url}/api/blocks/{key}/assets/{served(rendered_card, 'assets/js/node_card.js')}",
             timeout=5,
         ) as response:
             node_card_js_body = response.read().decode("utf-8")
-        expect("getUserMedia" in node_card_js_body, "Le JS node-card doit utiliser getUserMedia.")
-        expect("camera-photo-preview-overlay" in node_card_js_body, "Le JS node-card doit afficher une preview avant capture.")
-        expect("facingMode" in node_card_js_body, "Le JS node-card doit demander la camera avant/arriere.")
-        expect('applyAction("capture_browser_photo"' in node_card_js_body, "Le JS node-card doit appeler l'action existante.")
-        expect("stopStream(stream)" in node_card_js_body, "Le JS node-card doit couper le stream en finally.")
-        expect("stopPropagation" in node_card_js_body, "Le bouton node-card doit isoler le clic du canvas.")
+        expect("getUserMedia" in node_card_js_body, "The node card JS must use getUserMedia.")
+        expect("camera-photo-preview-overlay" in node_card_js_body, "The node card JS must show a preview before capture.")
+        expect("facingMode" in node_card_js_body, "The node card JS must request the front/rear camera.")
+        expect('applyAction("capture_browser_photo"' in node_card_js_body, "The node card JS must call the existing action.")
+        expect("stopStream(stream)" in node_card_js_body, "The node card JS must stop the stream in finally.")
+        expect("stopPropagation" in node_card_js_body, "The node card button must isolate its click from the canvas.")
 
         applied = http_json(
             server.base_url,
@@ -217,8 +217,8 @@ def main() -> None:
             },
         )
         saved_path = str(applied.get("saved_path") or "")
-        expect(saved_path.startswith("exports/camera-api/"), "La capture doit respecter output_dir.")
-        expect((server.root_dir / saved_path).read_bytes() == JPEG_BYTES, "La capture doit etre ecrite cote serveur.")
+        expect(saved_path.startswith("exports/camera-api/"), "The capture must honor output_dir.")
+        expect((server.root_dir / saved_path).read_bytes() == JPEG_BYTES, "The capture must be written on the server.")
 
         document_for_patch = camera_display_document(node.get("config") or {})
         created_project = create_project_api(server, title="Camera Photo Graph Patch", document=document_for_patch)
@@ -251,7 +251,7 @@ def main() -> None:
         updated_graph = http_json(server.base_url, f"/api/projects/{project_id}/graph/state")
         updated_camera = next(item for item in updated_graph["document"]["nodes"] if item["id"] == "camera-photo-1")
         patched_path = str(updated_camera.get("config", {}).get("latest_capture_path") or "")
-        expect(patched_path.startswith("exports/camera-api/"), "latest_capture_path doit etre persiste dans le graphe.")
+        expect(patched_path.startswith("exports/camera-api/"), "latest_capture_path must be persisted in the graph.")
 
         config = dict(node.get("config") or {})
         config.update(applied.get("node_patch", {}).get("config") or {})
@@ -259,12 +259,12 @@ def main() -> None:
         for runtime_mode in ("centralized", "zeromq_active"):
             created = create_run_api(server, document, runtime_mode=runtime_mode)
             run = wait_for_run_terminal(server, str(created.get("run_id") or ""), timeout_sec=15)
-            expect(run.get("status") == "success", f"Le run Camera doit reussir en {runtime_mode}.")
+            expect(run.get("status") == "success", f"The Camera run must succeed in {runtime_mode}.")
             camera_result = run.get("results", {}).get("camera-photo-1", {})
             expect(camera_result.get("content_type") == IMAGE_PATH, f"Camera doit emettre image/path en {runtime_mode}.")
-            expect(saved_path in str(camera_result.get("last_message") or ""), f"Camera doit emettre la capture en {runtime_mode}.")
+            expect(saved_path in str(camera_result.get("last_message") or ""), f"Camera must emit the capture in {runtime_mode}.")
             display_result = run.get("results", {}).get("display-1", {})
-            expect(saved_path in str(display_result.get("last_message") or ""), f"Display doit recevoir la photo en {runtime_mode}.")
+            expect(saved_path in str(display_result.get("last_message") or ""), f"Display must receive the photo in {runtime_mode}.")
 
     print("[ok] F5.21_camera_photo_block")
 

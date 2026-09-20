@@ -134,7 +134,7 @@ async function startCamera(root, state, api) {
   if (state.startButton instanceof HTMLButtonElement) {
     state.startButton.disabled = true;
   }
-  setStatus(root, "Ouverture de la camera navigateur...");
+  setStatus(root, "Opening the browser camera...");
   try {
     const constraints = {
       video: videoConstraints(root),

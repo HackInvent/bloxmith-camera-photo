@@ -5,7 +5,7 @@
       <h2 id="{{ node_id }}BlockModalTitle">{{ node_title }}</h2>
     </div>
     <div class="modal-actions">
-      <button class="ghost-btn" data-close-block-modal type="button">Fermer</button>
+      <button class="ghost-btn" data-close-block-modal type="button">Close</button>
     </div>
   </div>
 
@@ -13,7 +13,7 @@
     <section class="camera-photo-modal-section">
       <div class="ports-editor-header"><span class="group-label">Capture</span></div>
       <p class="inspector-copy">
-        La photo est prise depuis la camera du navigateur, puis enregistree par le bloc dans le dossier configure.
+        The photo is taken with the browser camera, then written by the block into the configured folder.
       </p>
       <div class="camera-browser-capture" data-camera-browser-capture>
         <div class="camera-browser-stage">
@@ -46,7 +46,7 @@
           <input data-block-config-field="jpeg_quality" data-block-value-type="number" type="number" min="0.1" max="1" step="0.01" value="{{ jpeg_quality }}" />
         </div>
         <div class="field-group">
-          <label>Dossier de sortie</label>
+          <label>Output folder</label>
           <input data-block-config-field="output_dir" type="text" value="{{ output_dir }}" placeholder="exports/camera" spellcheck="false" />
         </div>
         <div class="field-group {{ latest_capture_hidden }}">
@@ -73,7 +73,7 @@
   </div>
 
   <div class="modal-actions camera-photo-modal-footer">
-    <button class="ghost-btn" data-close-block-modal type="button">Annuler</button>
-    <button class="solid-btn" data-block-apply type="button" disabled>Appliquer</button>
+    <button class="ghost-btn" data-close-block-modal type="button">Cancel</button>
+    <button class="solid-btn" data-block-apply type="button" disabled>Apply</button>
   </div>
 </div>

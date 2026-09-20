@@ -131,10 +131,10 @@ function createCaptureOverlay() {
         <img class="camera-photo-preview-image" alt="" hidden />
       </div>
       <div class="camera-photo-preview-controls">
-        <button class="camera-photo-preview-close" type="button" aria-label="Fermer">Fermer</button>
+        <button class="camera-photo-preview-close" type="button" aria-label="Close">Close</button>
         <button class="camera-photo-preview-shot" type="button" aria-label="Prendre la photo"></button>
       </div>
-      <p class="camera-photo-preview-status">Ouverture de la camera...</p>
+      <p class="camera-photo-preview-status">Opening the camera...</p>
     </div>
   `;
   document.body.append(overlay);
@@ -239,7 +239,7 @@ async function openCaptureOverlay(root, api, context) {
     return;
   }
   if (window.isSecureContext === false) {
-    api.log?.("[camera-error] La camera navigateur exige HTTPS sur mobile.");
+    api.log?.("[camera-error] The browser camera requires HTTPS on mobile.");
     return;
   }
   if (typeof api.applyAction !== "function") {
@@ -270,14 +270,14 @@ async function openCaptureOverlay(root, api, context) {
     elements.video.srcObject = stream;
     await elements.video.play();
     await waitForVideoFrame(elements.video);
-    elements.status.textContent = "Cadrez la photo puis appuyez sur le bouton.";
+    elements.status.textContent = "Frame the shot, then press the button.";
     elements.captureButton.disabled = false;
     elements.captureButton.addEventListener("click", async () => {
       if (closed || elements.captureButton.disabled) {
         return;
       }
       elements.captureButton.disabled = true;
-      elements.status.textContent = "Enregistrement de la photo...";
+      elements.status.textContent = "Saving the photo...";
       try {
         const savedPath = await persistVideoFrame(elements.video, elements.canvas, api, config);
         elements.preview.src = elements.canvas.toDataURL("image/jpeg", config.jpeg_quality);
