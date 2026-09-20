@@ -58,37 +58,6 @@ class CameraPhotoBlock(BlockDefinition):
 
     kind = "camera_photo"
 
-    def ui_assets(self, surface: str = "modal") -> list[dict[str, str]]:
-        """Return frontend assets for each camera block UI surface.
-
-        Args:
-            surface: Requested UI surface name.
-
-        Returns:
-            CSS and JavaScript assets declared for the requested surface.
-        """
-
-        if surface == "modal":
-            return [
-                {"kind": "css", "path": "assets/css/block_ui.css"},
-                {"kind": "js", "path": "assets/js/block_modal.js"},
-            ]
-        if surface == "inspector_panel":
-            return [{"kind": "css", "path": "assets/css/block_ui.css"}]
-        if surface == "node_card":
-            return [
-                {"kind": "css", "path": "assets/css/block_ui.css"},
-                {"kind": "js", "path": "assets/js/node_card.js"},
-            ]
-        if surface == "mini_node_card":
-            return [
-                {"kind": "css", "path": "assets/css/block_ui.css"},
-                {"kind": "js", "path": "assets/js/node_card.js"},
-                {"kind": "css", "path": "mini/node_card.css"},
-                {"kind": "js", "path": "mini/node_card.js"},
-            ]
-        return []
-
     def render_node_card(self, *, node: dict[str, Any], payload: dict[str, Any] | None = None) -> dict[str, Any]:
         """Render the camera block canvas body.
 

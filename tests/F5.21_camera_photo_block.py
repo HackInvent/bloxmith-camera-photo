@@ -34,6 +34,8 @@ from blocs import get_block_definition
 from bloxsmith_app.block_runtime import BlockRuntimeContext
 from bloxsmith_app.port_types import IMAGE_PATH
 from ui_smoke_common import create_project_api, create_run_api, expect, http_json, isolated_server, wait_for_run_terminal
+from urllib.parse import quote
+from block_test_packages import install_test_package, release_key, surface_payload
 
 
 JPEG_BYTES = b"\xff\xd8\xff\xe0browser camera jpeg\xff\xd9"
@@ -164,31 +166,28 @@ def main() -> None:
     expect("data-block-config-field=\"camera_facing\"" in modal["html"], "Le modal doit exposer la camera avant/arriere.")
 
     with isolated_server() as server:
+        # Les surfaces sont des assets de release : le bundled kind n'en sert aucun.
+        model = install_test_package(server, "camera_photo")
+        key = quote(release_key(model), safe="")
+        served = lambda payload, suffix: next(
+            asset["path"] for asset in payload["assets"] if asset["path"].endswith(suffix))
         node = block.build_node_payload(
             node_id="camera-photo-1",
             config_overrides={"resolution": "640x480", "output_dir": "exports/camera-api"},
         )
-        rendered = http_json(server.base_url, "/api/blocks/camera_photo/modal", method="POST", payload={"node": node})
+        rendered = surface_payload(server, model, node, "modal")
         assets = rendered.get("assets") or []
-        expect(
-            {"kind": "js", "path": "assets/js/block_modal.js"} in assets,
-            "Le modal Camera doit declarer son asset JS de capture navigateur.",
-        )
-        rendered_card = http_json(server.base_url, "/api/blocks/camera_photo/node-card", method="POST", payload={"node": node})
+        rendered_card = surface_payload(server, model, node, "node_card")
         card_assets = rendered_card.get("assets") or []
-        expect(
-            {"kind": "js", "path": "assets/js/node_card.js"} in card_assets,
-            "La carte Camera doit declarer son asset JS de capture directe.",
-        )
         with urlopen(
-            f"{server.base_url}/api/blocks/camera_photo/assets/assets/js/block_modal.js",
+            f"{server.base_url}/api/blocks/{key}/assets/{served(rendered, 'assets/js/block_modal.js')}",
             timeout=5,
         ) as response:
             js_body = response.read().decode("utf-8")
         expect("getUserMedia" in js_body, "Le JS modal doit utiliser getUserMedia.")
         expect("facingMode" in js_body, "Le JS modal doit demander la camera avant/arriere.")
         with urlopen(
-            f"{server.base_url}/api/blocks/camera_photo/assets/assets/js/node_card.js",
+            f"{server.base_url}/api/blocks/{key}/assets/{served(rendered_card, 'assets/js/node_card.js')}",
             timeout=5,
         ) as response:
             node_card_js_body = response.read().decode("utf-8")
