@@ -78,7 +78,7 @@ class CameraPhotoBlock(BlockDefinition):
                 "title": node.get("title") or self.default_title(),
                 "source": "Navigateur web",
                 "resolution": config["resolution"],
-                "last_capture": config["latest_capture_path"] or "Aucune capture",
+                "last_capture": config["latest_capture_path"] or self.translate("block.camera_photo.no_capture", fallback="No capture"),
             },
         )
         context = dict(rendered.get("context") if isinstance(rendered.get("context"), dict) else {})
@@ -249,7 +249,8 @@ class CameraPhotoBlock(BlockDefinition):
         """Return the latest browser capture path for runtime previews."""
 
         config = self._runtime_config(getattr(node, "config", {}) or {})
-        return config["latest_capture_path"] or "Aucune capture navigateur"
+        return config["latest_capture_path"] or self.translate(
+            "block.camera_photo.no_browser_capture", fallback="No browser capture")
 
     def _ui_config(self, node: dict[str, Any]) -> dict[str, Any]:
         """Return normalized capture settings from a serialized node."""
@@ -281,7 +282,8 @@ class CameraPhotoBlock(BlockDefinition):
             "camera_facing_user_selected": "selected" if config["camera_facing"] == "user" else "",
             "jpeg_quality": str(config["jpeg_quality"]),
             "output_dir": escape(config["output_dir"], quote=True),
-            "latest_capture_path": escape(latest_capture_path or "Aucune capture enregistree.", quote=True),
+            "latest_capture_path": escape(latest_capture_path or self.translate(
+                "block.camera_photo.no_capture_saved", fallback="No capture saved."), quote=True),
             "latest_capture_value": escape(latest_capture_path, quote=True),
             "latest_capture_hidden": "hidden" if not latest_capture_path else "",
             "latest_capture_at": escape(config["latest_capture_at"] or "-", quote=True),

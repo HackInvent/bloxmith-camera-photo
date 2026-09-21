@@ -270,24 +270,26 @@ async function openCaptureOverlay(root, api, context) {
     elements.video.srcObject = stream;
     await elements.video.play();
     await waitForVideoFrame(elements.video);
-    elements.status.textContent = "Frame the shot, then press the button.";
+    elements.status.textContent = text(elements.status, "block.camera_photo.frame_the_shot", {}, "Frame the shot, then press the button.");
     elements.captureButton.disabled = false;
     elements.captureButton.addEventListener("click", async () => {
       if (closed || elements.captureButton.disabled) {
         return;
       }
       elements.captureButton.disabled = true;
-      elements.status.textContent = "Saving the photo...";
+      elements.status.textContent = text(elements.status, "block.camera_photo.saving_photo", {}, "Saving the photo...");
       try {
         const savedPath = await persistVideoFrame(elements.video, elements.canvas, api, config);
         elements.preview.src = elements.canvas.toDataURL("image/jpeg", config.jpeg_quality);
         elements.preview.hidden = false;
-        elements.status.textContent = savedPath ? `Photo saved: ${savedPath}` : "Photo saved.";
+        elements.status.textContent = savedPath
+          ? text(elements.status, "block.camera_photo.photo_saved", { path: savedPath }, `Photo saved: ${savedPath}`)
+          : text(elements.status, "block.camera_photo.photo_saved_plain", {}, "Photo saved.");
         api.log?.(savedPath ? `[camera] Photo saved from the card: ${savedPath}` : "[camera] Photo saved from the card.");
         window.setTimeout(close, 450);
       } catch (error) {
-        const message = error instanceof Error ? error.message : String(error || "erreur inconnue");
-        elements.status.textContent = `Enregistrement impossible: ${message}`;
+        const message = error instanceof Error ? error.message : String(error || "unknown error");
+        elements.status.textContent = text(elements.status, "block.camera_photo.save_failed", { error: message }, `Saving failed: ${message}`);
         elements.captureButton.disabled = false;
         api.log?.(`[camera-error] Saving from the card failed: ${message}`);
       }
@@ -299,7 +301,7 @@ async function openCaptureOverlay(root, api, context) {
       }
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error || "erreur inconnue");
+    const message = error instanceof Error ? error.message : String(error || "unknown error");
     api.log?.(`[camera-error] Opening the camera from the card failed: ${message}`);
     close();
   }
@@ -342,6 +344,20 @@ async function captureFromNodeCard(root, api, context) {
  * @param {object} context - Node-card render context.
  * @returns {void}
  */
+/**
+ * Resolve one block text in the active language, from the catalog of the owning release.
+ *
+ * @param {HTMLElement} element - Element inside the mounted surface, carrying its release.
+ * @param {string} key - Block catalog key.
+ * @param {object} params - Placeholder values.
+ * @param {string} fallback - Authored English text.
+ * @returns {string} Localized text.
+ */
+function text(element, key, params, fallback) {
+  const release = element?.closest?.("[data-block-release]")?.dataset?.blockRelease || "";
+  return window.CWI18n?.t?.(key, params, fallback, release) ?? fallback;
+}
+
 export function mount(root, api, context) {
   const button = root.querySelector("[data-camera-photo-capture]");
   if (!(button instanceof HTMLButtonElement)) {

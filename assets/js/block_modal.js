@@ -85,6 +85,20 @@ function videoConstraints(root) {
  * @param {HTMLElement} root - Camera modal root.
  * @param {string} message - Status message.
  */
+/**
+ * Resolve one block text in the active language, from the catalog of the owning release.
+ *
+ * @param {HTMLElement} element - Element inside the mounted surface, carrying its release.
+ * @param {string} key - Block catalog key.
+ * @param {object} params - Placeholder values.
+ * @param {string} fallback - Authored English text.
+ * @returns {string} Localized text.
+ */
+function text(element, key, params, fallback) {
+  const release = element?.closest?.("[data-block-release]")?.dataset?.blockRelease || "";
+  return window.CWI18n?.t?.(key, params, fallback, release) ?? fallback;
+}
+
 function setStatus(root, message) {
   const status = root.querySelector("[data-camera-browser-status]");
   if (status) {
@@ -127,14 +141,14 @@ function stopCamera(state) {
  */
 async function startCamera(root, state, api) {
   if (!navigator.mediaDevices?.getUserMedia) {
-    setStatus(root, "Camera navigateur indisponible.");
+    setStatus(root, text(root, "block.camera_photo.camera_unavailable_browser", {}, "The browser camera is unavailable."));
     api.log?.("[camera] navigator.mediaDevices.getUserMedia unavailable.");
     return;
   }
   if (state.startButton instanceof HTMLButtonElement) {
     state.startButton.disabled = true;
   }
-  setStatus(root, "Opening the browser camera...");
+  setStatus(root, text(root, "block.camera_photo.opening_camera", {}, "Opening the browser camera..."));
   try {
     const constraints = {
       video: videoConstraints(root),
@@ -150,12 +164,12 @@ async function startCamera(root, state, api) {
     if (state.stopButton instanceof HTMLButtonElement) {
       state.stopButton.disabled = false;
     }
-    setStatus(root, "Camera prete.");
+    setStatus(root, text(root, "block.camera_photo.camera_ready", {}, "Camera ready."));
   } catch (error) {
     stopCamera(state);
-    const message = error instanceof Error ? error.message : String(error || "erreur inconnue");
-    setStatus(root, `Ouverture camera impossible: ${message}`);
-    api.log?.(`[camera-error] Ouverture camera impossible: ${message}`);
+    const message = error instanceof Error ? error.message : String(error || "unknown error");
+    setStatus(root, text(root, "block.camera_photo.open_failed", { error: message }, `Opening the camera failed: ${message}`));
+    api.log?.(`[camera-error] Opening the camera failed: ${message}`);
   }
 }
 
@@ -168,7 +182,7 @@ async function startCamera(root, state, api) {
  */
 async function captureAndSave(root, state, api) {
   if (!state.stream || !(state.video instanceof HTMLVideoElement)) {
-    setStatus(root, "Camera non ouverte.");
+    setStatus(root, text(root, "block.camera_photo.camera_not_open", {}, "The camera is not open."));
     return;
   }
   const width = state.video.videoWidth || 1280;
@@ -177,7 +191,7 @@ async function captureAndSave(root, state, api) {
   state.canvas.height = height;
   const context = state.canvas.getContext("2d");
   if (!context) {
-    setStatus(root, "Canvas navigateur indisponible.");
+    setStatus(root, text(root, "block.camera_photo.canvas_unavailable", {}, "The browser canvas is unavailable."));
     return;
   }
   context.drawImage(state.video, 0, 0, width, height);
@@ -185,7 +199,7 @@ async function captureAndSave(root, state, api) {
   if (state.saveButton instanceof HTMLButtonElement) {
     state.saveButton.disabled = true;
   }
-  setStatus(root, "Saving the photo...");
+  setStatus(root, text(root, "block.camera_photo.saving_photo", {}, "Saving the photo..."));
   try {
     const result = await api.applyAction("capture_browser_photo", {
       data_url: dataUrl,
@@ -196,12 +210,14 @@ async function captureAndSave(root, state, api) {
       state.preview.src = dataUrl;
       state.preview.hidden = false;
     }
-    setStatus(root, savedPath ? `Photo saved: ${savedPath}` : "Photo saved.");
+    setStatus(root, savedPath
+      ? text(root, "block.camera_photo.photo_saved", { path: savedPath }, `Photo saved: ${savedPath}`)
+      : text(root, "block.camera_photo.photo_saved_plain", {}, "Photo saved."));
     api.log?.(savedPath ? `[camera] Photo saved: ${savedPath}` : "[camera] Photo saved.");
   } catch (error) {
-    const message = error instanceof Error ? error.message : String(error || "erreur inconnue");
-    setStatus(root, `Enregistrement impossible: ${message}`);
-    api.log?.(`[camera-error] Enregistrement impossible: ${message}`);
+    const message = error instanceof Error ? error.message : String(error || "unknown error");
+    setStatus(root, text(root, "block.camera_photo.save_failed", { error: message }, `Saving failed: ${message}`));
+    api.log?.(`[camera-error] Saving failed: ${message}`);
   } finally {
     if (state.saveButton instanceof HTMLButtonElement && state.stream) {
       state.saveButton.disabled = false;
@@ -245,7 +261,7 @@ export function mount(root, api) {
   stopButton?.addEventListener("click", (event) => {
     event.preventDefault();
     stopCamera(state);
-    setStatus(root, "Camera arretee.");
+    setStatus(root, text(root, "block.camera_photo.camera_stopped", {}, "Camera stopped."));
   });
   root.addEventListener("click", (event) => {
     if (event.target.closest("[data-close-block-modal]")) {

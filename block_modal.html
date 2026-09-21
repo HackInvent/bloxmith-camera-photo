@@ -1,18 +1,18 @@
 <div class="modal-panel cw-camera-photo-modal" role="dialog" aria-modal="true" aria-labelledby="{{ node_id }}BlockModalTitle" data-generic-block-modal-root data-node-id="{{ node_id }}" data-node-kind="{{ node_kind }}">
   <div class="modal-header">
     <div>
-      <span class="panel-kicker">Bloc {{ node_kind_title }}</span>
+      <span class="panel-kicker"><span data-i18n="ui.block_kit.block">Block</span> {{ node_kind_title }}</span>
       <h2 id="{{ node_id }}BlockModalTitle">{{ node_title }}</h2>
     </div>
     <div class="modal-actions">
-      <button class="ghost-btn" data-close-block-modal type="button">Close</button>
+      <button class="ghost-btn" data-close-block-modal type="button" data-i18n="ui.block_kit.close">Close</button>
     </div>
   </div>
 
   <div class="camera-photo-modal-body">
     <section class="camera-photo-modal-section">
-      <div class="ports-editor-header"><span class="group-label">Capture</span></div>
-      <p class="inspector-copy">
+      <div class="ports-editor-header"><span class="group-label" data-i18n="block.camera_photo.capture_section">Capture</span></div>
+      <p class="inspector-copy" data-i18n="block.camera_photo.capture_hint">
         The photo is taken with the browser camera, then written by the block into the configured folder.
       </p>
       <div class="camera-browser-capture" data-camera-browser-capture>
@@ -22,58 +22,58 @@
           <img data-camera-browser-preview alt="" hidden />
         </div>
         <div class="camera-browser-actions">
-          <button class="ghost-btn" data-camera-browser-start type="button">Ouvrir camera</button>
-          <button class="solid-btn" data-camera-browser-save type="button" disabled>Capturer et enregistrer</button>
-          <button class="ghost-btn" data-camera-browser-stop type="button" disabled>Arreter</button>
+          <button class="ghost-btn" data-camera-browser-start type="button" data-i18n="block.camera_photo.open_camera">Open the camera</button>
+          <button class="solid-btn" data-camera-browser-save type="button" disabled data-i18n="block.camera_photo.capture_and_save">Capture and save</button>
+          <button class="ghost-btn" data-camera-browser-stop type="button" disabled data-i18n="block.camera_photo.stop">Stop</button>
         </div>
         <p class="inspector-copy camera-browser-status" data-camera-browser-status>{{ latest_capture_path }}</p>
       </div>
 
       <div class="field-grid">
         <div class="field-group">
-          <label>Resolution</label>
+          <label data-i18n="block.camera_photo.resolution_label">Resolution</label>
           <input data-block-config-field="resolution" type="text" value="{{ resolution }}" placeholder="1280x720" spellcheck="false" />
         </div>
         <div class="field-group">
-          <label>Camera</label>
+          <label data-i18n="block.camera_photo.camera_label">Camera</label>
           <select data-block-config-field="camera_facing">
-            <option value="environment" {{ camera_facing_environment_selected }}>Arriere</option>
-            <option value="user" {{ camera_facing_user_selected }}>Avant</option>
+            <option value="environment" {{ camera_facing_environment_selected }} data-i18n="block.camera_photo.camera_back">Back</option>
+            <option value="user" {{ camera_facing_user_selected }} data-i18n="block.camera_photo.camera_front">Front</option>
           </select>
         </div>
         <div class="field-group">
-          <label>Qualite JPEG</label>
+          <label data-i18n="block.camera_photo.jpeg_quality_label">JPEG quality</label>
           <input data-block-config-field="jpeg_quality" data-block-value-type="number" type="number" min="0.1" max="1" step="0.01" value="{{ jpeg_quality }}" />
         </div>
         <div class="field-group">
-          <label>Output folder</label>
+          <label data-i18n="block.camera_photo.output_folder_label">Output folder</label>
           <input data-block-config-field="output_dir" type="text" value="{{ output_dir }}" placeholder="exports/camera" spellcheck="false" />
         </div>
         <div class="field-group {{ latest_capture_hidden }}">
-          <label>Derniere capture</label>
+          <label data-i18n="block.camera_photo.latest_capture_label">Latest capture</label>
           <input readonly type="text" value="{{ latest_capture_value }}" spellcheck="false" />
         </div>
       </div>
     </section>
 
     <section class="camera-photo-modal-section">
-      <div class="ports-editor-header"><span class="group-label">Identite</span></div>
+      <div class="ports-editor-header"><span class="group-label" data-i18n="ui.block_kit.identity">Identity</span></div>
       {{ title_field_html }}
     </section>
 
     <section class="camera-photo-modal-section">
-      <div class="ports-editor-header"><span class="group-label">Ports</span></div>
+      <div class="ports-editor-header"><span class="group-label" data-i18n="ui.block_kit.ports">Ports</span></div>
       {{ ports_html }}
     </section>
 
     <section class="camera-photo-modal-section">
-      <div class="ports-editor-header"><span class="group-label">Dernier etat</span></div>
+      <div class="ports-editor-header"><span class="group-label" data-i18n="ui.block_kit.last_state">Last state</span></div>
       {{ runtime_html }}
     </section>
   </div>
 
   <div class="modal-actions camera-photo-modal-footer">
-    <button class="ghost-btn" data-close-block-modal type="button">Cancel</button>
-    <button class="solid-btn" data-block-apply type="button" disabled>Apply</button>
+    <button class="ghost-btn" data-close-block-modal type="button" data-i18n="ui.block_kit.cancel">Cancel</button>
+    <button class="solid-btn" data-block-apply type="button" disabled data-i18n="ui.block_kit.apply">Apply</button>
   </div>
 </div>

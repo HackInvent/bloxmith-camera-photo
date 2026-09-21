@@ -149,7 +149,7 @@ def main() -> None:
     expect("Camera" in card["html"], "The node card must render the Camera block.")
     expect("Navigateur web" in card["html"], "The node card must show the browser source.")
     expect("data-camera-photo-capture" in card["html"], "The node card must expose the capture button.")
-    expect('aria-label="Capturer une photo"' in card["html"], "The capture button must be accessible.")
+    expect('aria-label="Take a photo"' in card["html"], "The capture button must be accessible.")
     expect(card.get("context", {}).get("resolution") == "1280x720", "The node card must receive the resolution.")
     expect(card.get("context", {}).get("camera_facing") == "environment", "The node card must request the rear camera by default.")
     expect(card.get("context", {}).get("output_dir") == "exports/camera", "The node card must receive output_dir.")
