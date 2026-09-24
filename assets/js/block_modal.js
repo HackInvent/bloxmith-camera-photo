@@ -1,3 +1,5 @@
+import { withProperties } from "./properties.js";
+
 /**
  * Role: Mounts browser-camera capture controls for the Camera Photo modal.
  * File Name: block_modal.js
@@ -231,7 +233,7 @@ async function captureAndSave(root, state, api) {
  * @param {HTMLElement} root - Mounted modal root.
  * @param {object} api - Generic block UI API.
  */
-export function mount(root, api) {
+function mountOwned(root, api) {
   const video = root.querySelector("[data-camera-browser-video]");
   const canvas = root.querySelector("[data-camera-browser-canvas]");
   const preview = root.querySelector("[data-camera-browser-preview]");
@@ -275,4 +277,9 @@ export function mount(root, api) {
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
+}
+
+/** Keep the block behavior and add properties-only accessibility. */
+export function mount(root, ...args) {
+  return withProperties(mountOwned).call(this, root, ...args);
 }
