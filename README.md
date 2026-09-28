@@ -10,9 +10,6 @@ Verified BloxSmith versions: **1.0.9** (bundled-block tests; see [test evidence]
 
 [![CAMERA — Captures one still photo from the operator's browser camera and saves it.](media/thumbnail.webp)](media/cover.png)
 
-*Concept illustration. [Artwork and generation prompt](media/README.md).*
-
-
 Capture a still image from the operator's browser camera and save it on the server.
 
 ## Behavior
